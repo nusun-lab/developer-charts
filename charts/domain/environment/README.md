@@ -8,6 +8,8 @@ It creates one Domain AppProject and one System-discovery ApplicationSet per ord
 Each ApplicationSet watches `systems/*/environments/<environment>.yaml`; a missing activation file
 means that System is inactive in that environment.
 
+By default, Domain admission provisions publisher identities. To admit a Domain without managing publisher clients, set `spec.platform.security.publisherIdentity.enabled: false` in the **trusted platform target**. This omits all publisher-identity resources while retaining the Domain AppProject and System discovery ApplicationSets. Publisher credentials/roles must then be supplied separately when needed. The default is enabled, preserving existing installations.
+
 The same Domain Application owns its privileged publisher boundary without creating a separate
 security Application: distinct Apicurio/Microcks Password generators, canonical Secrets,
 same-namespace Keycloak projections and `KeycloakOIDCClient` resources, exact-name get-only RBAC,
