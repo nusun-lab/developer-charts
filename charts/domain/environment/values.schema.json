@@ -124,6 +124,7 @@
               "type": "object",
               "required": ["keycloak", "secrets"],
               "properties": {
+                "publisherIdentity": {"type": "object", "properties": {"enabled": {"type": "boolean", "default": true}}, "additionalProperties": false},
                 "keycloak": {
                   "type": "object",
                   "required": ["namespace", "instanceName", "realm"],
