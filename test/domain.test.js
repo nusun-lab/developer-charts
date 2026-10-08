@@ -145,3 +145,29 @@ test('Domain root environment is not required and tenant definitions cannot carr
     /additional propert(?:y|ies).*schemaRegistry.*not allowed/i,
   );
 });
+
+test('Domain admission is unchanged with publisher identity disabled', () => {
+  const values = fixture('split-scm.yaml');
+  const enabled = render('charts/domain/environment', values);
+  values.spec.platform.security.publisherIdentity = {enabled: false};
+  lint('charts/domain/environment', values);
+  const disabled = render('charts/domain/environment', values);
+  assert.deepEqual(disabled, enabled.filter(item =>
+    item.kind === 'AppProject' || item.kind === 'ApplicationSet'));
+});
+
+test('Domain publisher identity is enabled by default and when explicit', () => {
+  const values = fixture('split-scm.yaml');
+  const baseline = render('charts/domain/environment', values);
+  values.spec.platform.security.publisherIdentity = {enabled: true};
+  assert.deepEqual(render('charts/domain/environment', values), baseline);
+});
+
+test('Domain publisher identity configuration is platform-controlled and boolean', () => {
+  const values = fixture('split-scm.yaml');
+  values.spec.platform.security.publisherIdentity = {enabled: 'false'};
+  assert.match(renderFailure('charts/domain/environment', values), /boolean/i);
+  delete values.spec.platform.security.publisherIdentity;
+  values.spec.publisherIdentity = {enabled: false};
+  assert.match(renderFailure('charts/domain/environment', values), /publisherIdentity.*not allowed/i);
+});
