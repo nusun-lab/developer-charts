@@ -1,3 +1,4 @@
+{{- if (dig "publisherIdentity" "enabled" true .Values.spec.platform.security) }}
 {{- $domain := .Values.metadata.name -}}
 {{- $keycloak := .Values.spec.platform.security.keycloak -}}
 {{- $secretsNamespace := .Values.spec.platform.security.secrets.namespace -}}
@@ -142,4 +143,5 @@ spec:
       method: client-secret
       secretRef: {name: {{ $client }}, key: client-secret}
     serviceAccountRoles: [{{ $role }}]
+{{- end }}
 {{- end }}
